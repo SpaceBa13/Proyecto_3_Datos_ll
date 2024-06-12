@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NewFolder1\**" />
+    <Content Remove="NewFolder1\**" />
+    <EmbeddedResource Remove="NewFolder1\**" />
+    <None Remove="NewFolder1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
