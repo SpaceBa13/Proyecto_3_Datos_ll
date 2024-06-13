@@ -37,7 +37,6 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                 sql_command.Parameters.AddWithValue("@Nombre", repo_name);
                 sql_command.Parameters.AddWithValue("@Descripcion", repo_model.description);
 
-
                 // Ejecutar el comando
                 int rowsAffected = sql_command.ExecuteNonQuery();
 
@@ -46,8 +45,6 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
             catch (Exception) { 
                 
             }
-
-
             // Supongamos que la operación fue exitosa
             return Ok($"Repositorio '{repo_name}' inicializado correctamente.");
         }
