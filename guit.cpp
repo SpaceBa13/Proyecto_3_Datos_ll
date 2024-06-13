@@ -8,7 +8,7 @@ void help() {
     void showHelp();
     std::cout << "Available commands:\n";
 
-    std::cout << "                      Inicializar un nuevo repositorio con el nombre\n";
+    std::cout << "                      Inicializar un nuevo repositorio con el nombree\n";
     std::cout << "                      Instancia un nuevo repositorio en el servidor y lo identifica con el nombre indicado por <name>.\n";
     std::cout << "  init                Además, crea cualquier estructura de datos necesaria para llevar el control del lado del cliente\n";
     std::cout << "                      sobre cuáles archivos están siendo controlados por el server y cuáles no. Debe crear un archivo\n";
