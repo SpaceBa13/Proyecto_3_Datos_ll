@@ -12,5 +12,8 @@ namespace Server_Proyecto_3_Datos_ll.Classes
             connection.ConnectionString = connection_stirng;
             connection.Open();
         }
+        public void close_connection_to_MySQL() {
+            connection.Close();
+        }
     }
 }
