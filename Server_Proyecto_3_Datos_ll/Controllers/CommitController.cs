@@ -25,13 +25,11 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
             //Obtenemos el commit mas reciente
             try
             {
-
                 // Consulta para obtener el último commit
                 string query = "SELECT * FROM Commits ORDER BY fecha DESC LIMIT 1";
                 //Creacion del comando MySQL a ejecutar
                 MySqlCommand cmd = new MySqlCommand(query, MySql_connection.connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
-
                 //Lee los datos de la base
                 if (reader.Read())
                 {
@@ -41,7 +39,6 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                     last_commit.message = reader["mensaje"].ToString();
                     last_commit.autor = reader["autor"].ToString();
                     last_commit.datetime = Convert.ToDateTime(reader["fecha"]);
-
                     reader.Close();
 
                     // Consulta para obtener los cambios de ese commit
@@ -65,16 +62,18 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                             filename_difference = reader["filename_diferencia"].ToString(),
                             datetime = Convert.ToDateTime(reader["fecha_cambio"])
                         };
-
                         last_commit.changes.Add(change);
                     }
                 }
                 else
                 {
+                    //Si no se encontraron commits escribe el contenido en la base de datos
                     if (Write_Commit_in_MySQL(commit_model))
                     {
+                        //Si el commit se escribio con exito, se escriben los cambios
                         Write_Changes_in_MySQL(commit_model);
                     }
+                    //Retorna el id del commit generado
                     return Ok(commit_model.id);
 
                 }
@@ -89,26 +88,23 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                         {
                             if (last_commit_change.datetime > incoming_commit_change.datetime)
                             {
+                                //Si se encontro una version mas nueva en la base de datos, retorna un error
                                 return StatusCode(500, "Cambios pendientes");
                             }
                         }
                     }
                 }
-
+                //Si no se encontraron commits escribe el contenido en la base de datos
                 if (Write_Commit_in_MySQL(commit_model))
                 {
+                    //Si el commit se escribio con exito, se escriben los cambios
                     Write_Changes_in_MySQL(commit_model);
                 }
+                //Retorna el id del commit generado
                 return Ok(commit_model.id);
-
             }
-            catch (Exception)
-            {
-            }
-
-
-            // Supongamos que la operación fue exitosa
-            return Ok(last_commit);
+            catch (Exception){}
+            return StatusCode(500, "Error");
         }
 
         public bool Write_Changes_in_MySQL(CommitModel commit_model)
