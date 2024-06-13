@@ -3,7 +3,7 @@
     public class RollbackModel
     {
         public string file { get; set; }
-        public string commit { get; set; }
+        public string commit_id { get; set; }
 
     }
 }
