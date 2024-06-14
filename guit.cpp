@@ -18,10 +18,10 @@ void help() {
 
     cout << "                      Inicializar un nuevo repositorio con el nombree\n";
     cout << "                      Instancia un nuevo repositorio en el servidor y lo identifica con el nombre indicado por <name>.\n";
-    cout << "  init                Adem�s, crea cualquier estructura de datos necesaria para llevar el control del lado del cliente\n";
-    cout << "                      sobre cu�les archivos est�n siendo controlados por el server y cu�les no. Debe crear un archivo\n";
+    cout << "  init                Ademas, crea cualquier estructura de datos necesaria para llevar el control del lado del cliente\n";
+    cout << "                      sobre cu�les archivos est�n siendo controlados por el server y cuales no. Debe crear un archivo\n";
     cout << "                      llamado .guitignore que permite especificar cu�les archivos son ignorados por el control de \n";
-    cout << "                      versiones. El servidor almacena esta informaci�n tambi�n.\n\n";
+    cout << "                      versiones. El servidor almacena esta informacion tambi�n.\n\n";
 
     cout << "  help                Mostrar este mensaje de ayuda\n";
     cout << "                      Este comando va a mostrar en la consola la informaci�n de lo que hace cada comando en guit.\n\n";
@@ -33,11 +33,11 @@ void help() {
     cout << "                      los archivos se agregan, se marcan como pendientes de commit.\n\n";
 
     cout << "                      Confirmar cambios con un mensaje\n";
-    cout << "                      Env�a los archivos agregados y pendientes de commit al server. Se debe especificar un mensaje a\n";
+    cout << "                      Envia los archivos agregados y pendientes de commit al server. Se debe especificar un mensaje a\n";
     cout << "  commit <message>    la hora de hacer el commit. El server recibe los cambios, y cuando ha terminado de procesar los\n";
     cout << "                      cambios, retorna un id de commit al cliente generado con MD5. El server debe verificar que el \n";
-    cout << "                      commit del cliente est� al d�a con el resto de cambios realizados por otros usuarios. En caso \n";
-    cout << "                      de que no sea as�, rechaza el commit.\n\n";
+    cout << "                      commit del cliente esta al dia con el resto de cambios realizados por otros usuarios. En caso \n";
+    cout << "                      de que no sea asi, rechaza el commit.\n\n";
 
     cout << "                      Mostrar el estado de los archivos\n";
     cout << "  status <file>       Este comando nos va a mostrar cuales archivos han sido cambiados, agregados o eliminados de \n";
@@ -45,10 +45,10 @@ void help() {
     cout << "                      recuperando el historial de cambios desde el server.\n\n";
 
     cout << "                      Revertir un archivo a una confirmaci�n espec�fica\n";
-    cout << "  rollback            Permite regresar un archivo en el tiempo a un commit espec�fico. Para esto, se comunica al server\n";
-    cout << "                      y recupera el archivo hasta dicha versi�n.\n\n";
+    cout << "  rollback            Permite regresar un archivo en el tiempo a un commit especifico. Para esto, se comunica al server\n";
+    cout << "                      y recupera el archivo hasta dicha version.\n\n";
 
-    cout << "  reset <file>        Restablecer los cambios de un archivo a la �ltima confirmaci�n\n";
+    cout << "  reset <file>        Restablecer los cambios de un archivo a la ultima confirmacion\n";
     cout << "                      Deshace cambios locales para un archivo y lo regresa al �ltimo commit.\n\n";
 
     cout << "                      Sincronizar un archivo con el servidor\n";
@@ -64,7 +64,7 @@ void initRepo(const string& name) {
 void addFiles(const string& options, const string& name) {
     if (options == "-A") {
         cout << "Adding all files...\n";
-        // Simulaci�n de agregar archivos
+        // Simulacin de agregar archivos
         stagedFiles.push_back("file1.txt");
         stagedFiles.push_back("file2.txt");
     }
@@ -79,13 +79,10 @@ string generarCommitId() {
 }
 
 void commitChanges(const string& message) {
-    if (stagedFiles.empty()) {
-        cout << "No hay archivos pendientes de commit.\n";
-        return;
-    }
+    
 
     cout << "Comenzando commit...\n";
-    cout << "Mensaje del commit: " << message << "\n";
+    cout << "Mensaje del commit: " << message << "hacer commit\n";
 
     // Generar un ID de commit �nico basado en el contador
     string commitId = generarCommitId();
