@@ -60,16 +60,10 @@ void printUsage() {
    
 
 int main(int argc, char* argv[]) {
-
-    //Zona de pruebas para las peticiones
-
-    //INIT REPO
-    string id_repo;
-    string repo_name = "Repo1";
-    string description = "Ola putos";
-
     Connection_With_Server* connetion_with_server = new Connection_With_Server(U("https://localhost:7092"));
-    connetion_with_server->init_repo_in_server(id_repo, repo_name, description);
+    //Zona de pruebas para las peticiones
+    string id_repo;
+ 
 
 
 
@@ -182,8 +176,28 @@ int main(int argc, char* argv[]) {
             help();
         }
         else if (input.find("init ") == 0) {
-            string name = input.substr(5); // Obtener el nombre del repositorio
-            initRepo(name);
+            // Extraer nombre del repositorio y descripción
+            string args = input.substr(5); // Eliminar "init "
+            size_t spacePos = args.find(' ');
+            if (spacePos != string::npos) {
+                string repo_name = args.substr(0, spacePos);
+                string description = args.substr(spacePos + 1);
+
+                if (!repo_name.empty() && !description.empty()) {
+                    initRepo(repo_name);
+
+                    string id_repo;
+                    //connection_with_server->init_repo_in_server(id_repo, repo_name, description);
+
+                    cout << "Repositorio '" << repo_name << "' inicializado con descripción: " << description << "\n";
+                }
+                else {
+                    cerr << "Error: Nombre del repositorio o descripción no pueden estar vacíos.\n";
+                }
+            }
+            else {
+                cerr << "Error: Formato incorrecto. Usa 'init <nombre> <descripcion>'.\n";
+            }
         }
         else if (input.find("add ") == 0) {
             string args = input.substr(4); // Obtener argumentos para add

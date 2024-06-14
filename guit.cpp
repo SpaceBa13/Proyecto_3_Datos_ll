@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <fstream>
 #include "guit.h"
 
 using namespace std;
@@ -58,8 +59,28 @@ void help() {
 }
 
 void initRepo(const string& name) {
+    static map<string, vector<string>> repos; // Mapa estático para almacenar repositorios
+
+    if (repos.find(name) != repos.end()) {
+        cout << "Repositorio '" << name << "' ya existe.\n";
+        return;
+    }
+
+    repos[name] = {}; // Inicializa un nuevo repositorio con el nombre dado
     cout << "Repositorio '" << name << "' inicializado.\n";
+
+    // Crear el archivo .guitignore
+    ofstream guitignoreFile(".guitignore");
+    if (guitignoreFile.is_open()) {
+        guitignoreFile << "# List of files to ignore\n";
+        guitignoreFile.close();
+        cout << "Archivo '.guitignore' creado.\n";
+    }
+    else {
+        cout << "Error al crear el archivo '.guitignore'.\n";
+    }
 }
+
 
 void addFiles(const string& options, const string& name) {
     if (options == "-A") {
