@@ -2,6 +2,7 @@
 #define GUIT_H
 
 #include <string>
+#include <vector>
 
 void help();
 void initRepo(const std::string& name);

@@ -1,5 +1,9 @@
-#include "guit.h"
 #include <iostream>
+#include <string>
+#include <vector>
+
+std::vector<std::string> stagedFiles; // Almacenar archivos pendientes de los commits
+int commitCounter = 0; 
 
 void help() {
 #include "guit.h"
@@ -49,35 +53,69 @@ void help() {
     std::cout << "                      interactivamente. \n\n";
 }
 
-
 void initRepo(const std::string& name) {
-    // Implementar lógica para los comandos que faktan
+    std::cout << "Repositorio '" << name << "' inicializado.\n";
 }
 
 void addFiles(const std::string& options, const std::string& name) {
-    
+    if (options == "-A") {
+        std::cout << "Todos los archivos agregados.\n";
+        // Simulación
+        stagedFiles.push_back("archprue1.txt");
+        stagedFiles.push_back("archprue2.txt");
+    }
+    else {
+        std::cout << "Archivo '" << name << "' agregado.\n";
+        stagedFiles.push_back(name);
+    }
+}
+
+std::string generarCommitId() {
+    return "commit_" + std::to_string(++commitCounter); // se genera un id basado en el commit que se hace
 }
 
 void commitChanges(const std::string& message) {
-    
+    if (stagedFiles.empty()) {
+        std::cout << "No hay archivos pendientes de commit.\n";
+        return;
+    }
 
-    //yo
+    std::cout << "Comenzando commit...\n";
+    std::cout << "Mensaje del commit: " << message << "\n";
 
+    // Generar un ID de commit único basado en el contador
+    std::string commitId = generarCommitId();
+    std::cout << "Commit ID: " << commitId << "\n";
 
+    // archivos que se commitean
+    std::cout << "Archivos a commitear:\n";
+    for (const auto& file : stagedFiles) {
+        std::cout << "  " << file << "\n";
+    }
+
+    // Limpiar archivos staged
+    stagedFiles.clear();
+
+    std::cout << "Commit realizado nivel GOD.\n";
 }
 
 void showStatus(const std::string& file) {
-    
+   
 }
 
 void rollbackFile(const std::string& file, const std::string& commit) {
-    
+   
 }
 
 void resetFile(const std::string& file) {
-    
+ 
 }
 
 void syncFile(const std::string& file) {
    
+}
+
+int main() {
+    help(); // Mostrar mensaje de ayuda al inicio
+    return 0;
 }
