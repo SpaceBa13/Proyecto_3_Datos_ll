@@ -85,7 +85,7 @@ public:
         // Hacer la solicitud POST
         pplx::task<void> requestTask = client_.request(methods::POST, builder.to_string(), status.serialize(), U("application/json"))
             .then([this, &changes](http_response response) {
-            this->get_changes_rollback(response, changes);
+            this->get_status_changes(response, changes);
                 });
 
         // Esperar a que la solicitud termine

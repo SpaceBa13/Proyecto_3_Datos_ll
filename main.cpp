@@ -129,27 +129,29 @@ int main(int argc, char* argv[]) {
 
     //Status
 
+    string new_current_datetime = get_current_datetime();
+
      // Construir el JSON según la estructura deseada
     json::value status_commit;
-    status_commit[U("id")] = json::value::string(U("c1a2b3d4e5f6g7h8i9j0"));
-    status_commit[U("id_repositorio")] = json::value::string(U("f3c3316348d5682e35cbfcf95b64fd2d"));
-    status_commit[U("message")] = json::value::string(U("Initial commit"));
-    status_commit[U("autor")] = json::value::string(U("John Doe"));
-    status_commit[U("datetime")] = json::value::string(U("2024-06-12T11:30:00"));
+    status_commit[U("id")] = json::value::string(to_string_t("c1a2b3d4e5f6g7h8i9j0"));
+    status_commit[U("id_repositorio")] = json::value::string(to_string_t("f3c3316348d5682e35cbfcf95b64fd2d"));
+    status_commit[U("message")] = json::value::string(to_string_t("Initial commit"));
+    status_commit[U("autor")] = json::value::string(to_string_t("John Doe"));
+    status_commit[U("datetime")] = json::value::string(to_string_t(new_current_datetime));
 
     // Construir el array 'changes'
     json::value status_changes;
     json::value change3, change4;
 
-    change3[U("id_commit")] = json::value::string(U("c1a2b3d4e5f6g7h8i9j0"));
-    change3[U("filename")] = json::value::string(U("archivo1.txt"));
-    change3[U("filename_difference")] = json::value::string(U("archivo1_v2.txt"));
-    change3[U("datetime")] = json::value::string(U("2024-06-13T10:15:30"));
+    change3[U("id_commit")] = json::value::string(to_string_t("c1a2b3d4e5f6g7h8i9j0"));
+    change3[U("filename")] = json::value::string(to_string_t("archivo1.txt"));
+    change3[U("filename_difference")] = json::value::string(to_string_t("archivo1_v2.txt"));
+    change3[U("datetime")] = json::value::string(to_string_t(new_current_datetime));
 
-    change4[U("id_commit")] = json::value::string(U("c1a2b3d4e5f6g7h8i9j0"));
-    change4[U("filename")] = json::value::string(U("archivo2.png"));
-    change4[U("filename_difference")] = json::value::string(U("archivo2_v2.png"));
-    change4[U("datetime")] = json::value::string(U("2024-06-13T10:16:30"));
+    change4[U("id_commit")] = json::value::string(to_string_t("c1a2b3d4e5f6g7h8i9j0"));
+    change4[U("filename")] = json::value::string(to_string_t("archivo2.png"));
+    change4[U("filename_difference")] = json::value::string(to_string_t("archivo2_v2.png"));
+    change4[U("datetime")] = json::value::string(to_string_t(new_current_datetime));
 
     status_changes[0] = change3;
     status_changes[1] = change4;
@@ -159,7 +161,7 @@ int main(int argc, char* argv[]) {
     // Construir el JSON final
     json::value status_from_server;
     json::value json_final;
-    json_final[U("file")] = json::value::string(U("example.txt"));
+    json_final[U("file")] = json::value::string(to_string_t("example.txt"));
     json_final[U("commit")] = status_commit;
 
     connetion_with_server->status_in_server(json_final, status_from_server);
