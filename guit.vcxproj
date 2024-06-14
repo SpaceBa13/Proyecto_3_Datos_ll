@@ -137,6 +137,9 @@
   <ItemGroup>
     <ResourceCompile Include="guit.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="dependencia.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

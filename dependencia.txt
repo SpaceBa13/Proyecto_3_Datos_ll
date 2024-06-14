@@ -1,0 +1,1 @@
+"-DCMAKE_TOOLCHAIN_FILE=C:/Users/space/Desktop/VCPKG/vcpkg/scripts/buildsystems/vcpkg.cmake"
