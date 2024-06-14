@@ -1,93 +1,174 @@
 #include <iostream>
 #include <string>
+#include <filesystem>
+#include <fstream>
 #include "guit.h"
+#include <cpprest/http_client.h>
+#include <cpprest/filestream.h>
 
 using namespace std;
+using namespace utility;           // Common utilities like string conversions
+using namespace web;               // Common features like URIs.
+using namespace web::http;         // Common HTTP functionality
+using namespace web::http::client; // HTTP client feature
+namespace fs = std::experimental::filesystem;
 
-// Función para eliminar espacios en blanco al inicio y al final de una cadena
-string noespacios(const string& str) {
-    size_t first = str.find_first_not_of(' ');
-    if (string::npos == first) {
-        return str;
+
+void createRepoFiles(const string& repoName, const string& description) {
+    // Definir la ruta del directorio
+    string basePath = "C:\\Users\\DELL\\Desktop\\Repositorios";
+    string repoPath = basePath + "\\" + repoName;
+
+    // Crear el directorio del repositorio
+    fs::create_directories(repoPath);
+
+    // Crear el archivo info.txt y escribir en él
+    ofstream infoFile(repoPath + "\\info.txt");
+    if (infoFile.is_open()) {
+        infoFile << "Repo Name: " << repoName << endl;
+        infoFile << "Description: " << description << endl;
+        infoFile.close();
     }
-    size_t last = str.find_last_not_of(' ');
-    return str.substr(first, (last - first + 1));
-}
+    else {
+        cerr << "Error al crear info.txt" << endl;
+    }
 
-void printUsage() {
-    cout << "Available commands:\n";
-    cout << "  help\n";
-    cout << "  init <repository_name>\n";
-    cout << "  add <-A | filename>\n";
-    cout << "  commit <message>\n";
-    cout << "  status <filename>\n";
-    cout << "  rollback <filename> <commit_id>\n";
-    cout << "  reset <filename>\n";
-    cout << "  sync <filename>\n";
-    cout << "Enter command (type 'exit' to quit): ";
+    // Crear el archivo .gitignore
+    ofstream gitignoreFile(repoPath + "\\.gitignore");
+    if (gitignoreFile.is_open()) {
+        gitignoreFile.close();
+    }
+    else {
+        cerr << "Error al crear .gitignore" << endl;
+    }
 }
 
 int main(int argc, char* argv[]) {
-    bool exitProgram = false;
 
-    while (!exitProgram) {
-        printUsage();
-        string input;
-        getline(cin, input); // Leer la entrada del usuario
+    // Crear el cliente HTTP
+    http_client client(U("https://localhost:7092"));
 
-        //eliminar espacios en blanco al inicio y al final
-        input = noespacios(input);
+    // Construir la URI y comenzar la solicitud
+    uri_builder builder(U("/InitRepo/"));
 
-        // Analizar el comando ingresado
-        if (input == "help") {
-            help();
-        }
-        else if (input.find("init ") == 0) {
-            string name = input.substr(5); // Obtener el nombre del repositorio
-            initRepo(name);
-        }
-        else if (input.find("add ") == 0) {
-            string args = input.substr(4); // Obtener argumentos para add
-            size_t spacePos = args.find(' ');
-            string options = args.substr(0, spacePos);
-            string name = (spacePos != string::npos) ? args.substr(spacePos + 1) : "";
-            addFiles(options, name);
-        }
-        else if (input.find("commit ") == 0) {
-            string message = input.substr(7); // Obtener el mensaje del commit
-            commitChanges(message);
-        }
-        else if (input.find("status ") == 0) {
-            string file = input.substr(7); // Obtener el nombre del archivo para status
-            showStatus(file);
-        }
-        else if (input.find("rollback ") == 0) {
-            string args = input.substr(9); // Obtener argumentos para rollback
-            size_t spacePos = args.find(' ');
-            string file = args.substr(0, spacePos);
-            string commit = (spacePos != string::npos) ? args.substr(spacePos + 1) : "";
-            rollbackFile(file, commit);
-        }
-        else if (input.find("reset ") == 0) {
-            string file = input.substr(6); // Obtener el nombre del archivo para reset
-            resetFile(file);
-        }
-        else if (input.find("sync ") == 0) {
-            string file = input.substr(5); // Obtener el nombre del archivo para sync
-            syncFile(file);
-        }
-        else if (input == "exit") {
-            exitProgram = true;
+
+
+    // Crear el objeto JSON a enviar
+    json::value postData;
+    postData[U("repo_name")] = json::value::string(U("Proyecto 1"));
+    postData[U("description")] = json::value::string(U("Primer proyecto"));
+
+
+
+    // Hacer la solicitud POST
+    pplx::task<void> requestTask = client.request(methods::POST, builder.to_string(), postData.serialize(), U("application/json"))
+        .then([](http_response response) {
+        // Manejar la respuesta
+        if (response.status_code() == status_codes::OK) {
+            std::wcout << U("POST exitoso. Código de estado: ") << response.status_code() << std::endl;
+            return response.extract_json();
         }
         else {
-            cerr << "Unknown command or incorrect usage.\n";
+            std::wcout << U("Error en la solicitud POST. Código de estado: ") << response.status_code() << std::endl;
+            return pplx::task_from_result(json::value());
         }
-    }
+            })
+        .then([](pplx::task<json::value> previousTask) {
+                try {
+                    const json::value& v = previousTask.get();
+                    std::wcout << U("Respuesta: ") << v.serialize() << std::endl;
+                }
+                catch (const http_exception& e) {
+                    std::wcout << U("Error al obtener la respuesta JSON: ") << e.what() << std::endl;
+                }
+            });
 
-    // Mensaje al final antes de cerrar
-    cout << "\nPresiona Enter para cerrar la consola...";
-    cin.get(); // Espera a que el usuario presione Enter
+            // Esperar a que la solicitud termine
+            try {
+                requestTask.wait();
+            }
+            catch (const std::exception& e) {
+                std::wcout << U("Error: ") << e.what() << std::endl;
+            }
 
-    return 0;
+            // Crear la carpeta y los archivos del repositorio
+            createRepoFiles("Proyecto 1", "Primer proyecto");
+
+
+            if (argc < 2) {
+                std::cerr << "No command provided.\n";
+                help();
+                return 1;
+            }
+
+            std::string command = argv[1];
+
+            if (command == "help") {
+                help();
+            }
+            else if (command == "init") {
+                if (argc < 3) {
+                    std::cerr << "No repository name provided for init.\n";
+                    return 1;
+                }
+                std::string name = argv[2];
+                initRepo(name);
+            }
+            else if (command == "add") {
+                if (argc < 3) {
+                    std::cerr << "No file name or options provided for add.\n";
+                    return 1;
+                }
+                std::string options = argv[2];
+                std::string name = (argc > 3) ? argv[3] : "";
+                addFiles(options, name);
+            }
+            else if (command == "commit") {
+                if (argc < 3) {
+                    std::cerr << "No commit message provided.\n";
+                    return 1;
+                }
+                std::string message = argv[2];
+                commitChanges(message);
+            }
+            else if (command == "status") {
+                if (argc < 3) {
+                    std::cerr << "No file provided for status.\n";
+                    return 1;
+                }
+                std::string file = argv[2];
+                showStatus(file);
+            }
+            else if (command == "rollback") {
+                if (argc < 4) {
+                    std::cerr << "Not enough arguments provided for rollback.\n";
+                    return 1;
+                }
+                std::string file = argv[2];
+                std::string commit = argv[3];
+                rollbackFile(file, commit);
+            }
+            else if (command == "reset") {
+                if (argc < 3) {
+                    std::cerr << "No file provided for reset.\n";
+                    return 1;
+                }
+                std::string file = argv[2];
+                resetFile(file);
+            }
+            else if (command == "sync") {
+                if (argc < 3) {
+                    std::cerr << "No file provided for sync.\n";
+                    return 1;
+                }
+                std::string file = argv[2];
+                syncFile(file);
+            }
+            else {
+                std::cerr << "Unknown command or incorrect usage.\n";
+                help();
+                return 1;
+            }
+
+            return 0;
 }
-
