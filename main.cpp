@@ -12,7 +12,62 @@ using namespace std;
 
 
 
-// Función para eliminar espacios en blanco al inicio y al final de una cadena
+// FunciÃ³n para manejar la respuesta HTTP
+void get_id_repo(http_response response, string& ID_Repo) {
+    if (response.status_code() == status_codes::OK) {
+        wcout << U("POST exitoso. CÃ³digo de estado: ") << response.status_code() << endl;
+        auto json_task = response.extract_json();
+        try {
+            json::value v = json_task.get();
+            // Extraer el valor de la etiqueta "ID_Repo" y almacenarlo en la variable ID_Repo
+            if (v.has_field(U("id"))) {
+                ID_Repo = utility::conversions::to_utf8string(v.at(U("id")).as_string());
+                wcout << U("Repositorio iniciado con existo, su id es: ") << v.at(U("id")).as_string() << endl;
+            }
+            else {
+                wcout << U("La respuesta no contiene la etiqueta 'ID_Repo'.") << endl;
+            }
+        }
+        catch (const http_exception& e) {
+            std::wcout << U("Error al obtener la respuesta JSON: ") << e.what() << endl;
+        }
+    }
+    else {
+        std::wcout << U("Error en la solicitud POST. CÃ³digo de estado: ") << response.status_code() << endl;
+    }
+}
+
+void init_repo_in_server(string& id_repo, string repo_name, string description) {
+    // Crear el cliente HTTP
+    http_client client(U("https://localhost:7092"));
+
+    // Construir la URI y comenzar la solicitud
+    uri_builder builder(U("/InitRepo/"));
+
+    // Crear el objeto JSON a enviar
+    json::value init_repo_model;
+    init_repo_model[U("repo_name")] = json::value::string(utility::conversions::to_string_t(repo_name));
+    init_repo_model[U("description")] = json::value::string(utility::conversions::to_string_t(description));
+
+    // Hacer la solicitud POST
+    pplx::task<void> requestTask = client.request(methods::POST, builder.to_string(), init_repo_model.serialize(), U("application/json"))
+        .then([&id_repo](http_response response) { // Captura por referencia
+        get_id_repo(response, id_repo);
+            });
+
+    // Esperar a que la solicitud termine
+    try {
+        requestTask.wait();
+    }
+    catch (const std::exception& e) {
+        std::wcout << U("Error: ") << e.what() << std::endl;
+    }
+
+}
+
+
+
+// Funciï¿½n para eliminar espacios en blanco al inicio y al final de una cadena
 string noespacios(const string& str) {
     size_t first = str.find_first_not_of(' ');
     if (string::npos == first) {
@@ -25,6 +80,8 @@ string noespacios(const string& str) {
 
 
 void printUsage() {
+
+
     cout << "Available commands:\n";
     cout << "  help\n";
     cout << "  init <repository_name>\n";
@@ -37,50 +94,7 @@ void printUsage() {
     cout << "Enter command (type 'exit' to quit): ";
 }
 
-    /*
-     Crear el cliente HTTP
-    http_client client(U("https://localhost:7092"));
-
-    // Construir la URI y comenzar la solicitud
-    //uri_builder builder(U("/InitRepo/"));
-
-    // Crear el objeto JSON a enviar
-    //json::value postData;
-    //postData[U("repo_name")] = json::value::string(U("repo"));
-    //postData[U("description")] = json::value::string(U("hola")); 
-
-
-    // Hacer la solicitud POST
-    pplx::task<void> requestTask = client.request(methods::POST, builder.to_string(), postData.serialize(), U("application/json"))
-        .then([](http_response response) {
-        // Manejar la respuesta
-        if (response.status_code() == status_codes::OK) {
-            std::wcout << U("POST exitoso. Código de estado: ") << response.status_code() << std::endl;
-            return response.extract_json();
-        }
-        else {
-            std::wcout << U("Error en la solicitud POST. Código de estado: ") << response.status_code() << std::endl;
-            return pplx::task_from_result(json::value());
-        }
-            })
-        .then([](pplx::task<json::value> previousTask) {
-        try {
-            const json::value& v = previousTask.get();
-            std::wcout << U("Respuesta: ") << v.serialize() << std::endl;
-        }
-        catch (const http_exception& e) {
-            std::wcout << U("Error al obtener la respuesta JSON: ") << e.what() << std::endl;
-        }
-            });
-
-    // Esperar a que la solicitud termine
-    try {
-        requestTask.wait();
-    }
-    catch (const std::exception& e) {
-        std::wcout << U("Error: ") << e.what() << std::endl;
-    }*/
-
+   
 
 int main(int argc, char* argv[]) {
     bool exitProgram = false;
