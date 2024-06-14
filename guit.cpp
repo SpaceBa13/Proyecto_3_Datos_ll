@@ -131,7 +131,7 @@ void rollbackFile(const std::string& file, const std::string& commit) {
 void resetFile(const std::string& file) {
     auto it = std::find(stagedFiles.begin(), stagedFiles.end(), file);
     if (it != stagedFiles.end()) {
-        std::cout << "Quitando cmabios para archivo: " << file << "\n";
+        std::cout << "Quitando cambios para archivo: " << file << "\n";
         stagedFiles.erase(it);
     } else {
         std::cout << "El archivo '" << file << "' no se encuentra staged para un commit.\n";
