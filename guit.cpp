@@ -32,9 +32,9 @@ void help() {
     std::cout << "                      de que no sea así, rechaza el commit.\n\n";
 
     std::cout << "                      Mostrar el estado de los archivos\n";
-    std::cout << "  status <file>       Este comando nos va a mostrar cuáles archivos han sido cambiados, agregados o eliminados de acuer-\n";
-    std::cout << "                      do al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, recupe-\n";
-    std::cout << "                      rando el historial de cambios desde el server.\n\n";
+    std::cout << "  status <file>       Este comando nos va a mostrar cuáles archivos han sido cambiados, agregados o eliminados de \n";
+    std::cout << "                      acuerdo al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, \n";
+    std::cout << "                      recuperando el historial de cambios desde el server.\n\n";
 
     std::cout << "                      Revertir un archivo a una confirmación específica\n";
     std::cout << "  rollback            Permite regresar un archivo en el tiempo a un commit específico. Para esto, se comunica al server\n";
