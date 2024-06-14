@@ -124,10 +124,6 @@ void showStatus(const std::string& file) {
             std::cout << "El archivo '" << file << "' no está pendiente para agregar.\n";
         }
     }
-    // Limpiar archivos staged (si es necesario)
-    stagedFiles.clear(); // Limpiamos los archivos después de commitear
-
-    cout << "Commit realizado correctamente.\n";
 }
 
 void rollbackFile(const std::string& file, const std::string& commit) {
