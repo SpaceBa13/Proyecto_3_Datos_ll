@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "guit.h"
 
 using namespace std;
 
 vector<string> stagedFiles; // Almacenar archivos pendientes de los commits
+map<string, map<string, string>> commits; // Almacenar commits {commitId: {filename: content}}
 int commitCounter = 0; 
 
 void help() {
@@ -127,7 +129,20 @@ void showStatus(const std::string& file) {
 }
 
 void rollbackFile(const string& file, const string& commit) {
-    // Implementar segun sea necesario
+    auto commitIt = commits.find(commit);
+    if (commitIt != commits.end()) {
+        auto fileIt = commitIt->second.find(file);
+        if (fileIt != commitIt->second.end()) {
+            cout << "Revirtiendo el archivo '" << file << "' al commit '" << commit << "'.\n";
+            cout << "Contenido restaurado: " << fileIt->second << "\n";
+        }
+        else {
+            cout << "El archivo '" << file << "' no existe en el commit '" << commit << "'.\n";
+        }
+    }
+    else {
+        cout << "El commit '" << commit << "' no existe.\n";
+    }
 }
 
 void resetFile(const std::string& file) {
