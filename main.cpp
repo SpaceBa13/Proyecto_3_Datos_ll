@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include "guit.h"
+#include <cpprest/http_client.h>
+#include <cpprest/filestream.h>
 
 using namespace std;
 
@@ -82,14 +84,6 @@ int main(int argc, char* argv[]) {
         else {
             cerr << "Unknown command or incorrect usage.\n";
         }
-    else {
-        std::cerr << "Unknown command or incorrect usage.\n";
-        help();
-        return 1;
-    else {
-        std::cerr << "Unknown command or incorrect usage.\n";
-        help();
-        return 1;
     }
 
     // Mensaje al final antes de cerrar

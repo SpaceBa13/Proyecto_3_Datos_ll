@@ -95,8 +95,8 @@ void commitChanges(const string& message) {
         std::cout << "  " << file << "\n";
     }
 
-    // Limpiar archivos staged
-    stagedFiles.clear();
+    // Limpiar archivos staged (si es necesario)
+    stagedFiles.clear(); // Limpiamos los archivos despues de comitear
 
     std::cout << "Commit realizado nivel GOD.\n";
 }
