@@ -45,8 +45,14 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
             catch (Exception) { 
                 
             }
+
+            InitResponseModel response = new InitResponseModel();
+            response.description = repo_model.description;
+            response.repo_name = repo_name;
+            response.ID = id_rep_md5;
+
             // Supongamos que la operación fue exitosa
-            return Ok($"Repositorio '{repo_name}' inicializado correctamente.");
+            return Ok(response);
         }
 
     }

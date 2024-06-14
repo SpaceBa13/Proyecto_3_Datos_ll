@@ -124,7 +124,7 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
 
                 string changes_json = JsonSerializer.Serialize(response, options);
 
-                return Ok(changes_json);
+                return Ok(response);
 
             }
 

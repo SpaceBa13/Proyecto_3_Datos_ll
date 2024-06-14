@@ -74,7 +74,7 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                         Write_Changes_in_MySQL(commit_model);
                     }
                     //Retorna el id del commit generado
-                    return Ok(commit_model.id);
+                    return Ok(commit_model);
 
                 }
                 reader.Close();
@@ -101,7 +101,7 @@ namespace Server_Proyecto_3_Datos_ll.Controllers
                     Write_Changes_in_MySQL(commit_model);
                 }
                 //Retorna el id del commit generado
-                return Ok(commit_model.id);
+                return Ok(commit_model);
             }
             catch (Exception){}
             return StatusCode(500, "Error");
