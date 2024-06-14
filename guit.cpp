@@ -61,19 +61,19 @@ void initRepo(const string& name) {
 
 void addFiles(const string& options, const string& name) {
     if (options == "-A") {
-        cout << "Todos los archivos agregados.\n";
-        // Simulación
-        stagedFiles.push_back("archprue1.txt");
-        stagedFiles.push_back("archprue2.txt");
+        cout << "Adding all files...\n";
+        // Simulación de agregar archivos
+        stagedFiles.push_back("file1.txt");
+        stagedFiles.push_back("file2.txt");
     }
     else {
-        cout << "Archivo '" << name << "' agregado.\n";
+        cout << "Adding file: " << name << "\n";
         stagedFiles.push_back(name);
     }
 }
 
 string generarCommitId() {
-    return "commit_" + to_string(++commitCounter); // se genera un id basado en el commit que se hace
+    return "commit_" + to_string(++commitCounter);
 }
 
 void commitChanges(const string& message) {
@@ -95,30 +95,24 @@ void commitChanges(const string& message) {
         cout << "  " << file << "\n";
     }
 
-    // Limpiar archivos staged
-    stagedFiles.clear();
+    // Limpiar archivos staged (si es necesario)
+    stagedFiles.clear(); // Limpiamos los archivos después de commitear
 
-    cout << "Commit realizado nivel GOD.\n";
+    cout << "Commit realizado correctamente.\n";
 }
 
 void showStatus(const string& file) {
-   
+    // Implementar según sea necesario
 }
 
 void rollbackFile(const string& file, const string& commit) {
-   
+    // Implementar según sea necesario
 }
 
 void resetFile(const string& file) {
- 
+    // Implementar según sea necesario
 }
 
 void syncFile(const string& file) {
-   
+    // Implementar según sea necesario
 }
-/*
-int main() {
-    help(); // Mostrar mensaje de ayuda al inicio
-    return 0;
-}
-*/
