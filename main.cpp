@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
                     initRepo(repo_name);
 
                     string id_repo;
-                    Connection_With_Server* connetion_with_server = new Connection_With_Server(U("https://localhost:7092"));
+                    Connection_With_Server* connection_with_server = new Connection_With_Server(U("https://localhost:7092"));
                     connection_with_server->init_repo_in_server(id_repo, repo_name, description);
 
                     cout << "Repositorio '" << repo_name << "' inicializado con descripción: " << description << "\n";
