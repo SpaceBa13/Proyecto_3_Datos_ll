@@ -16,38 +16,38 @@ void help() {
 
     cout << "                      Inicializar un nuevo repositorio con el nombree\n";
     cout << "                      Instancia un nuevo repositorio en el servidor y lo identifica con el nombre indicado por <name>.\n";
-    cout << "  init                Además, crea cualquier estructura de datos necesaria para llevar el control del lado del cliente\n";
-    cout << "                      sobre cuáles archivos están siendo controlados por el server y cuáles no. Debe crear un archivo\n";
-    cout << "                      llamado .guitignore que permite especificar cuáles archivos son ignorados por el control de \n";
-    cout << "                      versiones. El servidor almacena esta información también.\n\n";
+    cout << "  init                Ademï¿½s, crea cualquier estructura de datos necesaria para llevar el control del lado del cliente\n";
+    cout << "                      sobre cuï¿½les archivos estï¿½n siendo controlados por el server y cuï¿½les no. Debe crear un archivo\n";
+    cout << "                      llamado .guitignore que permite especificar cuï¿½les archivos son ignorados por el control de \n";
+    cout << "                      versiones. El servidor almacena esta informaciï¿½n tambiï¿½n.\n\n";
 
     cout << "  help                Mostrar este mensaje de ayuda\n";
-    cout << "                      Este comando va a mostrar en la consola la información de lo que hace cada comando en guit.\n\n";
+    cout << "                      Este comando va a mostrar en la consola la informaciï¿½n de lo que hace cada comando en guit.\n\n";
 
     cout << "                      Agregar archivos al repositorio\n";
-    cout << "                      Permite agregar todos los archivos que no estén registrados o que tengan nuevos cambios al repo-\n";
-    cout << "  add                 sitorio. Ignora los archivos que estén configurados en .guitignore. El usuario puede indicar cada\n";
+    cout << "                      Permite agregar todos los archivos que no estï¿½n registrados o que tengan nuevos cambios al repo-\n";
+    cout << "  add                 sitorio. Ignora los archivos que estï¿½n configurados en .guitignore. El usuario puede indicar cada\n";
     cout << "                      archivo por agregar, o puede usar el flag -A para agregar todos los archivos relevantes. Cuando\n";
     cout << "                      los archivos se agregan, se marcan como pendientes de commit.\n\n";
 
     cout << "                      Confirmar cambios con un mensaje\n";
-    cout << "                      Envía los archivos agregados y pendientes de commit al server. Se debe especificar un mensaje a\n";
+    cout << "                      Envï¿½a los archivos agregados y pendientes de commit al server. Se debe especificar un mensaje a\n";
     cout << "  commit <message>    la hora de hacer el commit. El server recibe los cambios, y cuando ha terminado de procesar los\n";
     cout << "                      cambios, retorna un id de commit al cliente generado con MD5. El server debe verificar que el \n";
-    cout << "                      commit del cliente esté al día con el resto de cambios realizados por otros usuarios. En caso \n";
-    cout << "                      de que no sea así, rechaza el commit.\n\n";
+    cout << "                      commit del cliente estï¿½ al dï¿½a con el resto de cambios realizados por otros usuarios. En caso \n";
+    cout << "                      de que no sea asï¿½, rechaza el commit.\n\n";
 
-    std::cout << "                      Mostrar el estado de los archivos\n";
-    std::cout << "  status <file>       Este comando nos va a mostrar cuáles archivos han sido cambiados, agregados o eliminados de \n";
-    std::cout << "                      acuerdo al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, \n";
-    std::cout << "                      recuperando el historial de cambios desde el server.\n\n";
+    cout << "                      Mostrar el estado de los archivos\n";
+    cout << "  status <file>       Este comando nos va a mostrar cuales archivos han sido cambiados, agregados o eliminados de \n";
+    cout << "                      acuerdo al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, \n";
+    cout << "                      recuperando el historial de cambios desde el server.\n\n";
 
-    cout << "                      Revertir un archivo a una confirmación específica\n";
-    cout << "  rollback            Permite regresar un archivo en el tiempo a un commit específico. Para esto, se comunica al server\n";
-    cout << "                      y recupera el archivo hasta dicha versión.\n\n";
+    cout << "                      Revertir un archivo a una confirmaciï¿½n especï¿½fica\n";
+    cout << "  rollback            Permite regresar un archivo en el tiempo a un commit especï¿½fico. Para esto, se comunica al server\n";
+    cout << "                      y recupera el archivo hasta dicha versiï¿½n.\n\n";
 
-    cout << "  reset <file>        Restablecer los cambios de un archivo a la última confirmación\n";
-    cout << "                      Deshace cambios locales para un archivo y lo regresa al último commit.\n\n";
+    cout << "  reset <file>        Restablecer los cambios de un archivo a la ï¿½ltima confirmaciï¿½n\n";
+    cout << "                      Deshace cambios locales para un archivo y lo regresa al ï¿½ltimo commit.\n\n";
 
     cout << "                      Sincronizar un archivo con el servidor\n";
     cout << "  sync <file>         Recupera los cambios para un archivo en el server y lo sincroniza con el archivo en el cliente.\n";
@@ -62,7 +62,7 @@ void initRepo(const string& name) {
 void addFiles(const string& options, const string& name) {
     if (options == "-A") {
         cout << "Adding all files...\n";
-        // Simulación de agregar archivos
+        // Simulaciï¿½n de agregar archivos
         stagedFiles.push_back("file1.txt");
         stagedFiles.push_back("file2.txt");
     }
@@ -85,7 +85,7 @@ void commitChanges(const string& message) {
     cout << "Comenzando commit...\n";
     cout << "Mensaje del commit: " << message << "\n";
 
-    // Generar un ID de commit único basado en el contador
+    // Generar un ID de commit ï¿½nico basado en el contador
     string commitId = generarCommitId();
     cout << "Commit ID: " << commitId << "\n";
 
@@ -96,14 +96,14 @@ void commitChanges(const string& message) {
     }
 
     // Limpiar archivos staged (si es necesario)
-    stagedFiles.clear(); // Limpiamos los archivos despues de comitear
+    stagedFiles.clear(); // Limpiamos los archivos despues de commitear
 
     std::cout << "Commit realizado nivel GOD.\n";
 }
 
 void showStatus(const std::string& file) {
     if (file.empty()) {
-        // enseña status de los staged files
+        // enseÃ±a status de los staged files
         if (stagedFiles.empty()) {
             std::cout << "No hay archivos pendientes para agregar.\n";
         }
@@ -115,19 +115,19 @@ void showStatus(const std::string& file) {
         }
     }
     else {
-        // enseña status de un file especifico
+        // enseÃ±a status de un file especifico
         auto it = std::find(stagedFiles.begin(), stagedFiles.end(), file);
         if (it != stagedFiles.end()) {
-            std::cout << "El archivo '" << file << "' está pendiente para agregar.\n";
+            std::cout << "El archivo '" << file << "' estÃ¡ pendiente para agregar.\n";
         }
         else {
-            std::cout << "El archivo '" << file << "' no está pendiente para agregar.\n";
+            std::cout << "El archivo '" << file << "' no estÃ¡ pendiente para agregar.\n";
         }
     }
 }
 
-void rollbackFile(const std::string& file, const std::string& commit) {
-    // Implementar según sea necesario
+void rollbackFile(const string& file, const string& commit) {
+    // Implementar segun sea necesario
 }
 
 void resetFile(const std::string& file) {
@@ -143,5 +143,5 @@ void resetFile(const std::string& file) {
 
 
 void syncFile(const string& file) {
-    // Implementar según sea necesario
+    // Implementar segï¿½n sea necesario
 }
