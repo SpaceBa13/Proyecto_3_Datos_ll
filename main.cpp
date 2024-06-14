@@ -2,6 +2,7 @@
 #include <string>
 #include "guit.h"
 
+
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "No command provided.\n";
