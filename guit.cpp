@@ -3,7 +3,7 @@
 #include <vector>
 
 std::vector<std::string> stagedFiles; // Almacenar archivos pendientes de los commits
-int commitCounter = 0; 
+int commitCounter = 0;
 
 void help() {
 #include "guit.h"
@@ -36,9 +36,9 @@ void help() {
     std::cout << "                      de que no sea así, rechaza el commit.\n\n";
 
     std::cout << "                      Mostrar el estado de los archivos\n";
-    std::cout << "  status <file>       Este comando nos va a mostrar cuáles archivos han sido cambiados, agregados o eliminados de acuer-\n";
-    std::cout << "                      do al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, recupe-\n";
-    std::cout << "                      rando el historial de cambios desde el server.\n\n";
+    std::cout << "  status <file>       Este comando nos va a mostrar cuáles archivos han sido cambiados, agregados o eliminados de \n";
+    std::cout << "                      acuerdo al commit anterior. Si el usuario especifica <file>, muestra el historial de cambios, \n";
+    std::cout << "                      recuperando el historial de cambios desde el server.\n\n";
 
     std::cout << "                      Revertir un archivo a una confirmación específica\n";
     std::cout << "  rollback            Permite regresar un archivo en el tiempo a un commit específico. Para esto, se comunica al server\n";
@@ -100,19 +100,46 @@ void commitChanges(const std::string& message) {
 }
 
 void showStatus(const std::string& file) {
-   
+    if (file.empty()) {
+        // enseña status de los staged files
+        if (stagedFiles.empty()) {
+            std::cout << "No hay archivos pendientes para agregar.\n";
+        }
+        else {
+            std::cout << "Archivos pendientes para agregar:\n";
+            for (const auto& stagedFile : stagedFiles) {
+                std::cout << "  " << stagedFile << "\n";
+            }
+        }
+    }
+    else {
+        // enseña status de un file especifico
+        auto it = std::find(stagedFiles.begin(), stagedFiles.end(), file);
+        if (it != stagedFiles.end()) {
+            std::cout << "El archivo '" << file << "' está pendiente para agregar.\n";
+        }
+        else {
+            std::cout << "El archivo '" << file << "' no está pendiente para agregar.\n";
+        }
+    }
 }
 
 void rollbackFile(const std::string& file, const std::string& commit) {
-   
+
 }
 
 void resetFile(const std::string& file) {
- 
+    auto it = std::find(stagedFiles.begin(), stagedFiles.end(), file);
+    if (it != stagedFiles.end()) {
+        std::cout << "Quitando cmabios para archivo: " << file << "\n";
+        stagedFiles.erase(it);
+    } else {
+        std::cout << "El archivo '" << file << "' no se encuentra staged para un commit.\n";
+    }
 }
 
 void syncFile(const std::string& file) {
-   
+
 }
 
 int main() {

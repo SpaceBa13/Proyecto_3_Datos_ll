@@ -40,11 +40,7 @@ int main(int argc, char* argv[]) {
         commitChanges(message);
     }
     else if (command == "status") {
-        if (argc < 3) {
-            std::cerr << "No file provided for status.\n";
-            return 1;
-        }
-        std::string file = argv[2];
+        std::string file = (argc > 2) ? argv[2] : "";
         showStatus(file);
     }
     else if (command == "rollback") {
