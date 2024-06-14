@@ -11,6 +11,25 @@ using namespace web::http::client; // HTTP client features
 using namespace std;
 using namespace utility::conversions;
 
+//Funcion para obtener el tiempo actual
+std::string get_current_datetime() {
+    // Obtener el tiempo actual
+    auto now = std::chrono::system_clock::now();
+
+    // Convertir el tiempo actual a tiempo local
+    std::time_t current_time = std::chrono::system_clock::to_time_t(now);
+
+    // Crear una estructura tm a partir del tiempo local
+    std::tm time_info;
+    localtime_s(&time_info, &current_time); // Para Windows
+
+    // Formatear la fecha y hora según el formato deseado
+    char buffer[20]; // Suficiente para "YYYY-MM-DDTHH:MM:SS" + el carácter nulo
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%S", &time_info);
+
+    return std::string(buffer);
+}
+
 
 // Función para manejar la respuesta HTTP
 void get_id_repo(http_response response, string& ID_Repo) {
@@ -62,10 +81,6 @@ void get_id_commit(http_response response, string& id_commit) {
     }
 }
 
-
-
-
-
 void init_repo_in_server(string& id_repo, string repo_name, string description) {
     // Crear el cliente HTTP
     http_client client(U("https://localhost:7092"));
@@ -115,6 +130,52 @@ void commit_in_server(json::value& commit, string &id_commit) {
     }
 }
 
+// Función para manejar la respuesta HTTP
+void get_changes_rollback(http_response response, json::value& changes) {
+    if (response.status_code() == status_codes::OK) {
+        wcout << U("POST exitoso. Código de estado: ") << response.status_code() << endl;
+        auto json_task = response.extract_json();
+        try {
+            json::value changes_from_server = json_task.get();
+            // Asignar el JSON completo de la respuesta a 'changes'
+            changes = changes_from_server;
+            std::wcout << U("Rollback realizado con exito, cambios realizados: ") << changes_from_server << std::endl;
+        }
+        catch (const http_exception& error) {
+            std::wcout << U("Error al extraer JSON de la respuesta: ") << error.what() << std::endl;
+        }
+    }
+    else {
+        std::wcout << U("Error en la solicitud POST. Código de estado: ") << response.status_code() << endl;
+    }
+}
+
+
+
+
+void rollback_in_server(json::value& rollback, json::value& changes) {
+    // Crear el cliente HTTP
+    http_client client(U("https://localhost:7092"));
+
+    // Construir la URI y comenzar la solicitud
+    uri_builder builder(U("/Rollback/"));
+
+    // Hacer la solicitud POST
+    pplx::task<void> requestTask = client.request(methods::POST, builder.to_string(), rollback.serialize(), U("application/json"))
+        .then([&changes](http_response response) {
+        get_changes_rollback(response, changes);
+            });
+
+    // Esperar a que la solicitud termine
+    try {
+        requestTask.wait();
+    }
+    catch (const std::exception& e) {
+        std::wcout << U("Error: ") << e.what() << std::endl;
+    }
+}
+
+
 
 // Funci�n para eliminar espacios en blanco al inicio y al final de una cadena
 string noespacios(const string& str) {
@@ -147,12 +208,20 @@ void printUsage() {
 
 int main(int argc, char* argv[]) {
 
+    //Zona de pruebas para las peticiones
+
+    //INIT REPO
     string id_repo;
     string repo_name = "Repo1";
     string description = "Ola putos";
 
     init_repo_in_server(id_repo, repo_name, description);
 
+
+    // Obtener la fecha y hora actual formateada
+    string current_datetime = get_current_datetime();
+
+    //COMMIT
     cout << id_repo << endl;
 
 
@@ -162,7 +231,7 @@ int main(int argc, char* argv[]) {
     commit_model[U("id_repositorio")] = json::value::string(to_string_t(id_repo));
     commit_model[U("message")] = json::value::string(to_string_t("Implement feature XYZ"));
     commit_model[U("autor")] = json::value::string(to_string_t("John Doe"));
-    commit_model[U("datetime")] = json::value::string(to_string_t("2024-06-12T11:30:00"));
+    commit_model[U("datetime")] = json::value::string(to_string_t(current_datetime));
 
     // Array para almacenar los cambios
     json::value changes_array;
@@ -172,7 +241,7 @@ int main(int argc, char* argv[]) {
     change1[U("id_commit")] = json::value::string(to_string_t("commit123"));
     change1[U("filename")] = json::value::string(to_string_t("archivo1.txt"));
     change1[U("filename_difference")] = json::value::string(to_string_t("archivo1_v2.txt"));
-    change1[U("datetime")] = json::value::string(to_string_t("2024-06-15T10:15:00"));
+    change1[U("datetime")] = json::value::string(to_string_t(current_datetime));
     changes_array[0] = change1;
 
     // Segundo cambio
@@ -180,7 +249,7 @@ int main(int argc, char* argv[]) {
     change2[U("id_commit")] = json::value::string(to_string_t("commit123"));
     change2[U("filename")] = json::value::string(to_string_t("archivo2.png"));
     change2[U("filename_difference")] = json::value::string(to_string_t("archivo2_v2.png"));
-    change2[U("datetime")] = json::value::string(to_string_t("2024-06-15T11:00:00"));
+    change2[U("datetime")] = json::value::string(to_string_t(current_datetime));
     changes_array[1] = change2;
 
     // Agregar el array de cambios al objeto principal
@@ -191,6 +260,19 @@ int main(int argc, char* argv[]) {
     commit_in_server(commit_model, id_commit);
 
     cout << id_commit << endl;
+
+    //ROLLBACK
+
+    json::value changes;
+
+    json::value rollback;
+
+    // Asignar valores al objeto JSON
+    rollback[U("file")] = json::value::string(U("archivo2.png"));
+    rollback[U("commit_id")] = json::value::string(to_string_t(id_commit));
+
+
+    rollback_in_server(rollback, changes);
 
 
 
