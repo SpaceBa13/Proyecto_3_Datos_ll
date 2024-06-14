@@ -16,4 +16,8 @@ void rollbackFile(const string& file, const string& commit);
 void resetFile(const string& file);
 void syncFile(const string& file);
 
+string read_file(const string& file_name);
+
+void write_file(const string& file_name, const string& content);
+
 #endif // GUIT_H
