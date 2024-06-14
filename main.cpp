@@ -3,12 +3,14 @@
 #include "guit.h"
 #include <cpprest/http_client.h>
 #include <cpprest/filestream.h>
+#include "windows.h"
 
 using namespace std;
 using namespace utility;           // Common utilities like string conversions
 using namespace web;               // Common features like URIs.
 using namespace web::http;         // Common HTTP functionality
 using namespace web::http::client; // HTTP client features
+namespace fs = std::experimental::filesystem;
 
 
 // Función para manejar la respuesta HTTP
@@ -65,9 +67,7 @@ void init_repo_in_server(string &id_repo, string repo_name, string description) 
 }
 
 
-
 int main(int argc, char* argv[]) {
-
     string id_repo;
     string repo_name = "Repo1";
     string description = "Ola putos";
@@ -75,20 +75,6 @@ int main(int argc, char* argv[]) {
     init_repo_in_server(id_repo, repo_name, description);
 
     cout << id_repo << endl;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (argc < 2) {
         std::cerr << "No command provided.\n";
